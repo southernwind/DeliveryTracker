@@ -49,8 +49,9 @@ namespace DeliveryTracker {
 		private static async Task InsertTrackingNumber(string number) {
 			using var dbContext = GetDbContext();
 			if (!await dbContext.TrackingNumbers.AnyAsync(x => x.Number == number)) {
+				var type = await Tracking.GetTrackingTypeAsync(number);
 				using var tran = await dbContext.Database.BeginTransactionAsync();
-				await dbContext.TrackingNumbers.AddAsync(new TrackingNumber { Number = number });
+				await dbContext.TrackingNumbers.AddAsync(new TrackingNumber { Number = number, Institution = (int)type });
 				await dbContext.SaveChangesAsync();
 				await tran.CommitAsync();
 			}

@@ -5,6 +5,8 @@
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.NET.Sdk.Functions" Version="3.0.1" />
+    <PackageReference Include="HtmlAgilityPack" />
+    <PackageReference Include="HtmlAgilityPack.CssSelectors.NetCore" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\DeliveryTracker.Database\DeliveryTracker.Database.csproj" />
