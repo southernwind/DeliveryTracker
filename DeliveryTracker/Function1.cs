@@ -28,7 +28,7 @@ namespace DeliveryTracker {
 			Configuration = builder.Build();
 		}
 
-		[FunctionName("Function1")]
+		[FunctionName("GetTrackingNumberFromMail")]
 		public static async Task<IActionResult> Run(
 			[HttpTrigger(AuthorizationLevel.Function, "post", Route = null)] HttpRequest req, ILogger log) {
 
@@ -40,17 +40,18 @@ namespace DeliveryTracker {
 			var matches = regex.Matches(body);
 			foreach (var match in matches.OfType<Match>()) {
 				// Database Insert
-				await InsertTrackingNumber(match.Groups["number"].Value);
+				await InsertTrackingNumber(match.Groups["number"].Value, log);
 			}
 
 			return new OkObjectResult(null);
 		}
 
-		private static async Task InsertTrackingNumber(string number) {
+		private static async Task InsertTrackingNumber(string number, ILogger log) {
 			using var dbContext = GetDbContext();
 			if (!await dbContext.TrackingNumbers.AnyAsync(x => x.Number == number)) {
 				var type = await Tracking.GetTrackingTypeAsync(number);
 				using var tran = await dbContext.Database.BeginTransactionAsync();
+				log.LogInformation($"registered: number={number},type={type}");
 				await dbContext.TrackingNumbers.AddAsync(new TrackingNumber { Number = number, Institution = (int)type });
 				await dbContext.SaveChangesAsync();
 				await tran.CommitAsync();

@@ -25,5 +25,18 @@ namespace DeliveryTracker {
 
 			return default;
 		}
+
+		public static async Task<DeliveryStatus> GetCurrentStatus(string number,TrackingType institution) {
+			switch (institution) {
+				case TrackingType.Yamato:
+					return await Yamato.GetCurrentStatus(number);
+				case TrackingType.Sagawa:
+					return await Sagawa.GetCurrentStatus(number);
+				case TrackingType.JapanPost:
+					return await JapanPost.GetCurrentStatus(number);
+				default:
+					return null;
+			}
+		}
 	}
 }

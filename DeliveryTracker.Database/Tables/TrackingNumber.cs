@@ -21,6 +21,14 @@ namespace DeliveryTracker.Database.Tables {
 		}
 
 		/// <summary>
+		/// 状態変更日時
+		/// </summary>
+		public DateTime? UpdateDate {
+			get;
+			set;
+		}
+
+		/// <summary>
 		/// 配送機関
 		/// </summary>
 		public int Institution {
